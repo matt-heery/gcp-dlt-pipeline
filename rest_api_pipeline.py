@@ -63,9 +63,12 @@ def load_tfl_data() -> None:
         dataset_name="tfl_data",
     )
 
-    load_info = pipeline.run(tfl_source())
-    logger.info(load_info)
+    load_info = pipeline.run(tfl_source(), loader_file_format="parquet")
+    tables = []
+    for package in load_info.load_packages:
+        tables = package.schema.data_table_names()
+    return tables
 
 
 if __name__ == "__main__":
-    load_tfl_data()
+    tables = load_tfl_data()
